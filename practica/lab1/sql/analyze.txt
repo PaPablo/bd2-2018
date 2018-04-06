@@ -1,0 +1,40 @@
+Hash Join  (cost=466017.33..955422.38 rows=10000 width=67) (actual time=5195.045..6928.601 rows=10000 loops=1)
+  Output: tav."nroAvion", tav."dniTrabajador", tav."fechaInicioReparacion", tav."fechaFinReparacion", falla.descripcion
+  Hash Cond: (tav."tipoFallaReparada" = falla."tipoFalla")
+  Buffers: shared hit=886 read=285515
+  ->  Hash Join  (cost=466007.98..955275.54 rows=10000 width=20) (actual time=5194.674..6926.688 rows=10000 loops=1)
+        Output: tav."nroAvion", tav."dniTrabajador", tav."fechaInicioReparacion", tav."fechaFinReparacion", tav."tipoFallaReparada"
+        Hash Cond: (tav."nroAvion" = avion."nroAvion")
+        Buffers: shared hit=880 read=285515
+        ->  Seq Scan on public."trabajadorReparacion" tav  (cost=0.00..398005.04 rows=24310004 width=20) (actual time=0.045..1701.718 rows=24310004 loops=1)
+              Output: tav."dniTrabajador", tav."nroAvion", tav."fechaInicioReparacion", tav."fechaFinReparacion", tav."tipoFallaReparada"
+              Buffers: shared hit=290 read=154615
+        ->  Hash  (cost=465882.98..465882.98 rows=10000 width=4) (actual time=3206.657..3206.657 rows=10000 loops=1)
+              Output: avion."nroAvion"
+              Buckets: 16384  Batches: 1  Memory Usage: 480kB
+              Buffers: shared hit=590 read=130900
+              ->  Hash Join  (cost=114.40..465882.98 rows=10000 width=4) (actual time=1736.240..3205.609 rows=10000 loops=1)
+                    Output: avion."nroAvion"
+                    Hash Cond: (avion."tipoModelo" = ma."tipoModelo")
+                    Buffers: shared hit=590 read=130900
+                    ->  Seq Scan on public.avion  (cost=0.00..374506.06 rows=24310006 width=8) (actual time=0.015..1592.865 rows=24310006 loops=1)
+                          Output: avion."nroAvion", avion."tipoModelo", avion."año", avion."horasVuelo"
+                          Buffers: shared hit=506 read=130900
+                    ->  Hash  (cost=114.39..114.39 rows=1 width=4) (actual time=1.085..1.085 rows=1 loops=1)
+                          Output: ma."tipoModelo"
+                          Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                          Buffers: shared hit=84
+                          ->  Seq Scan on public."modeloAvion" ma  (cost=0.00..114.39 rows=1 width=4) (actual time=0.645..1.074 rows=1 loops=1)
+                                Output: ma."tipoModelo"
+                                Filter: (ma.capacidad = 1388)
+                                Rows Removed by Filter: 2430
+                                Buffers: shared hit=84
+  ->  Hash  (cost=5.82..5.82 rows=282 width=55) (actual time=0.320..0.320 rows=282 loops=1)
+        Output: falla.descripcion, falla."tipoFalla"
+        Buckets: 1024  Batches: 1  Memory Usage: 33kB
+        Buffers: shared hit=3
+        ->  Seq Scan on public.falla  (cost=0.00..5.82 rows=282 width=55) (actual time=0.028..0.138 rows=282 loops=1)
+              Output: falla.descripcion, falla."tipoFalla"
+              Buffers: shared hit=3
+Planning time: 2.689 ms
+Execution time: 6929.100 ms

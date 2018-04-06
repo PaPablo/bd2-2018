@@ -1,0 +1,32 @@
+Nested Loop  (cost=114.98..472647.55 rows=10000 width=67) (actual time=1619.293..3041.977 rows=10000 loops=1)
+  Output: tav."nroAvion", tav."dniTrabajador", tav."fechaInicioReparacion", tav."fechaFinReparacion", falla.descripcion
+  Buffers: shared hit=60682 read=130865
+  ->  Nested Loop  (cost=114.84..470897.54 rows=10000 width=20) (actual time=1619.288..3033.633 rows=10000 loops=1)
+        Output: tav."nroAvion", tav."dniTrabajador", tav."fechaInicioReparacion", tav."fechaFinReparacion", tav."tipoFallaReparada"
+        Buffers: shared hit=40682 read=130865
+        ->  Hash Join  (cost=114.40..465882.98 rows=10000 width=4) (actual time=1619.250..3020.668 rows=10000 loops=1)
+              Output: avion."nroAvion"
+              Hash Cond: (avion."tipoModelo" = ma."tipoModelo")
+              Buffers: shared hit=657 read=130836
+              ->  Seq Scan on public.avion  (cost=0.00..374506.06 rows=24310006 width=8) (actual time=0.031..1519.582 rows=24310006 loops=1)
+                    Output: avion."nroAvion", avion."tipoModelo", avion."año", avion."horasVuelo"
+                    Buffers: shared hit=570 read=130836
+              ->  Hash  (cost=114.39..114.39 rows=1 width=4) (actual time=0.911..0.911 rows=1 loops=1)
+                    Output: ma."tipoModelo"
+                    Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                    Buffers: shared hit=84
+                    ->  Seq Scan on public."modeloAvion" ma  (cost=0.00..114.39 rows=1 width=4) (actual time=0.551..0.892 rows=1 loops=1)
+                          Output: ma."tipoModelo"
+                          Filter: (ma.capacidad = 1388)
+                          Rows Removed by Filter: 2430
+                          Buffers: shared hit=84
+        ->  Index Scan using "reparacionesAvion" on public."trabajadorReparacion" tav  (cost=0.44..0.49 rows=1 width=20) (actual time=0.001..0.001 rows=1 loops=10000)
+              Output: tav."dniTrabajador", tav."nroAvion", tav."fechaInicioReparacion", tav."fechaFinReparacion", tav."tipoFallaReparada"
+              Index Cond: (tav."nroAvion" = avion."nroAvion")
+              Buffers: shared hit=40025 read=29
+  ->  Index Scan using "pkFalla" on public.falla  (cost=0.15..0.17 rows=1 width=55) (actual time=0.001..0.001 rows=1 loops=10000)
+        Output: falla."tipoFalla", falla.descripcion
+        Index Cond: (falla."tipoFalla" = tav."tipoFallaReparada")
+        Buffers: shared hit=20000
+Planning time: 4.182 ms
+Execution time: 3042.546 ms

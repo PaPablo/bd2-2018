@@ -1,0 +1,19 @@
+Decimos cómo llenamos la base con los datos de seed para hacer la carga con el script
+
+Presentamos el script (en comments cómo se hizo qué)
+
+Mostramos el script de la consulta, junto con su explicación.
+
+Extraer Plan de aplicación
+
+Mostrar el pev output
+
+Señalar los mayores costos
+
+Proponer creación de indices sobre las columnas que se joinean
+
+Mostrar cómo se crean los inidices
+
+Repetir la consulta y mostrar el nuevo plan creado
+
+Comparar los tiempos obtenidos
