@@ -1,2 +1,4 @@
 libros
 DB4O
+
+*.backup
