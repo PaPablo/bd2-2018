@@ -1,0 +1,50 @@
+Una compañía de alquiler de coches tiene una base de datos de los vehículos de
+su flota actual. Para todos los vehículos incluye el número de identifcación de
+cada uno, el número de la matrícula, el fabricante, el modelo, la fecha de
+adquisición y el color.  Se incluyen datos específicos para algunos tipos de
+vehículos:
+
+- Camiones: capacidad de carga.
+- Coches deportivos: potencia, requisitos de edad del conductor.
+- Camionetas: número de plazas.
+- Vehículos todo terreno: altura de los bajos, eje motor (tracción a dos o a
+  las cuatro ruedas).
+
+Constrúyase la definición del esquema de una base de datos orientada a objetos
+para esta base de datos. Utilícese la herencia donde resulte conveniente
+
+---
+
+class Coche{ 
+    int identificacion
+    int matricula
+    Fabricante fabricante
+    int modelo
+    date fecha_adquisicion
+    Color color
+}
+
+class Color {
+    string nombre
+}
+class Fabricante {
+    string nombre
+}
+
+class Camion isa Coche {
+    float capacidad
+}
+
+class Deportivo isa Coche {
+    potencia
+    req_edad_conductor
+
+}
+class Camioneta isa Coche {
+    integer numero_plazas
+}
+
+Todo_terreno isa Coche {
+    altura_bajos
+    eje_motor set(dos_ruedas,cuatro_ruedas)
+}
