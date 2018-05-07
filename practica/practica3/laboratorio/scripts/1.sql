@@ -6,7 +6,7 @@ medidas de la pista
 una coleccion de las aerolineas que trabajan en el mismo.
  */
 
--- creacion de tipos necesarios
+-- PUNTO 1
 
 -- tipo para ubicacion del aeropuerto
 create type tubicacionAeorpuerto as (
@@ -50,6 +50,8 @@ begin
 end;
 $$ language plpgsql;
 
+-- PUNTO 2
+
 -- function para chequear que cada aerolinea insertada sea correcta
 create or replace function check_aerolineas(aerolineas oid[]) returns boolean as 
 $$
@@ -66,13 +68,16 @@ begin
 end;
 $$ language plpgsql;
 
+-- unico aeropuerto (criterio nombre case unsensitive distintos)
 create or replace function aeropuerto_unico(varchar) returns boolean as
 $$
 begin
 	return (select $1 not in (select nombre from aeropuerto));
 end
 $$ language plpgsql;
-drop table aeropuerto;
+
+-- tabla de aeropuertos 
+
 create table aeropuerto of taeropuerto (
 	primary key(oid),
 	constraint aeropuerto_nombre_check check(aeropuerto_unico(nombre)),
